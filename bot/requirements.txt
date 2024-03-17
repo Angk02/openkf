@@ -3,7 +3,7 @@ numpy~=1.23.5
 tqdm~=4.65.0
 requests~=2.28.2
 fastapi~=0.95.0
-langchain==0.0.174
+langchain==0.1.0
 transformers>=4.31.0
 loguru==0.7.0
 beautifulsoup4
