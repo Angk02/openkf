@@ -3,7 +3,7 @@ FROM golang:1.21 as builder
 
 WORKDIR /openkf-server
 
-COPY . .
+COPY ./server .
 
 RUN go env -w GO111MODULE=on \
     && go env -w CGO_ENABLED=0 \

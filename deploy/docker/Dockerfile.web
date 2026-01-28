@@ -17,10 +17,10 @@ FROM node:18 AS builder
 
 WORKDIR /openkf-web
 
-COPY . .
+COPY ./web .
 
-RUN npm set registry http://registry.npm.taobao.org/ \ 
-    && npm install --registry=http://registry.npm.taobao.org \
+RUN npm set registry https://registry.npmmirror.com \ 
+    && npm install --registry=https://registry.npmmirror.com \
     && chmod +x scripts/setup.sh && ./scripts/setup.sh \
     && npm run build
 

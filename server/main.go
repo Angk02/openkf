@@ -21,7 +21,6 @@ import (
 	"github.com/openimsdk/openkf/server/internal/conn/client"
 	"github.com/openimsdk/openkf/server/internal/conn/db"
 	"github.com/openimsdk/openkf/server/internal/middleware/hooks"
-	slackcmd "github.com/openimsdk/openkf/server/internal/msg/slack_cmd"
 	"github.com/openimsdk/openkf/server/internal/router"
 	"github.com/openimsdk/openkf/server/internal/utils"
 	"github.com/openimsdk/openkf/server/pkg/log"
@@ -55,7 +54,7 @@ func main() {
 	serverAddress := fmt.Sprintf("%s:%d", config.Config.Server.Ip, config.Config.Server.Port)
 
 	// Add slack server
-	go slackcmd.InitSlackListen()
+	//go slackcmd.InitSlackListen()
 
 	r := router.InitRouter()
 	s := server.InitServer(serverAddress, r)

@@ -16,7 +16,6 @@ package db
 
 import (
 	"fmt"
-	"net"
 
 	influxdb2 "github.com/influxdata/influxdb-client-go/v2"
 	"github.com/influxdata/influxdb-client-go/v2/api"
@@ -39,9 +38,9 @@ var influxcient *InfluxDB
 
 // InitInfluxDB init influxdb connection.
 func InitInfluxDB() {
-	severURL := net.JoinHostPort(
+	severURL := fmt.Sprintf("http://%s:%d",
 		config.Config.InfluxDB.Ip,
-		fmt.Sprintf("%d", config.Config.InfluxDB.Port),
+		config.Config.InfluxDB.Port,
 	)
 
 	influxDBClient := influxdb2.NewClient(severURL, config.Config.InfluxDB.Token)
