@@ -23,22 +23,14 @@ import (
 )
 
 const (
-	// pathUserToken get user token path.
-	pathUserToken = "/auth/user_token"
+	// pathGetAdminToken get admin token path.
+	pathGetAdminToken = "/auth/get_admin_token"
+	// pathGetUserToken get user token path.
+	pathGetUserToken = "/auth/get_user_token"
 )
 
-// GetUserToken get user token from openim server.
-func GetUserToken(param *request.UserTokenParams, operationID, host string) (*response.UserTokenResponse, error) {
-	// host: http://ip:port
-	url := fmt.Sprintf("%s%s", host, pathUserToken)
-
+func parseTokenResponse(resp map[string]interface{}) (*response.UserTokenResponse, error) {
 	r := &response.UserTokenResponse{}
-	client := client.NewClient(url)
-	resp, err := client.POST(operationID, "", param)
-	if err != nil {
-		return r, err
-	}
-
 	code, ok := resp["errCode"].(float64)
 	if !ok {
 		return r, fmt.Errorf("code is not float64")
@@ -52,10 +44,10 @@ func GetUserToken(param *request.UserTokenParams, operationID, host string) (*re
 
 	r.ErrDlt, ok = resp["errDlt"].(string)
 	if !ok {
-		return r, fmt.Errorf("msg is not string")
+		return r, fmt.Errorf("errDlt is not string")
 	}
 
-	if data, ok := resp["data"]; ok {
+	if data, ok := resp["data"]; ok && data != nil {
 		data, ok := data.(map[string]interface{})
 		if !ok {
 			return r, fmt.Errorf("data is not map[string]interface{}")
@@ -75,4 +67,28 @@ func GetUserToken(param *request.UserTokenParams, operationID, host string) (*re
 	}
 
 	return r, nil
+}
+
+// GetAdminToken get admin token from OpenIM server.
+func GetAdminToken(param *request.AdminTokenParams, operationID, host string) (*response.UserTokenResponse, error) {
+	// host: http://ip:port
+	url := fmt.Sprintf("%s%s", host, pathGetAdminToken)
+	c := client.NewClient(url)
+	resp, err := c.POST(operationID, "", param)
+	if err != nil {
+		return &response.UserTokenResponse{}, err
+	}
+	return parseTokenResponse(resp)
+}
+
+// GetUserToken get user token from OpenIM server (requires admin token).
+func GetUserToken(param *request.UserTokenParams, operationID, host, adminToken string) (*response.UserTokenResponse, error) {
+	// host: http://ip:port
+	url := fmt.Sprintf("%s%s", host, pathGetUserToken)
+	c := client.NewClient(url)
+	resp, err := c.POST(operationID, adminToken, param)
+	if err != nil {
+		return &response.UserTokenResponse{}, err
+	}
+	return parseTokenResponse(resp)
 }

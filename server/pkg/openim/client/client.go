@@ -16,6 +16,8 @@ package client
 
 import (
 	"encoding/json"
+	"fmt"
+	"net/url"
 
 	"github.com/go-resty/resty/v2"
 )
@@ -40,19 +42,48 @@ func NewClient(url string) Client {
 	}
 }
 
-// GET get unimplemented.
+// GET get.
 func (c *httpClient) GET(operationID, token string, params interface{}) (map[string]interface{}, error) {
-	return nil, nil
+	req := c.client.R().
+		SetHeader("Content-Type", "application/json").
+		SetHeader("operationID", operationID)
+	if token != "" {
+		req.SetHeader("token", token)
+	}
+	switch v := params.(type) {
+	case nil:
+		// noop
+	case map[string]string:
+		req.SetQueryParams(v)
+	case url.Values:
+		req.SetQueryParamsFromValues(v)
+	default:
+		return nil, fmt.Errorf("unsupported query params type: %T", params)
+	}
+
+	resp, err := req.Get(c.url)
+	if err != nil {
+		return nil, err
+	}
+
+	var responseData map[string]interface{}
+	if err := json.Unmarshal(resp.Body(), &responseData); err != nil {
+		return nil, err
+	}
+	return responseData, nil
 }
 
 // POST post.
 func (c *httpClient) POST(operationID, token string, params interface{}) (map[string]interface{}, error) {
-	resp, err := c.client.R().
+	req := c.client.R().
 		SetHeader("Content-Type", "application/json").
 		SetHeader("operationID", operationID).
-		SetHeader("token", token).
-		SetBody(params).
-		Post(c.url)
+		SetBody(params)
+	if token != "" {
+		req.SetHeader("token", token)
+	}
+
+	resp, err := req.Post(c.url)
 	if err != nil {
 		return nil, err
 	}

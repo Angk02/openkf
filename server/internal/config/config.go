@@ -80,11 +80,11 @@ func ConfigInit(configPath string) {
 			PoolSize: GetIntOrDefault("email.pool_size", 4),
 		},
 		OpenIM: OpenIM{
-			Secret:     GetStringOrDefault("openim.secret", "openkf"),
+			Secret:     GetStringOrDefault("openim.secret", "openIM123"),
 			Ip:         GetStringOrDefault("openim.ip", "127.0.0.1"),
 			ApiPort:    GetIntOrDefault("openim.api_port", 10002),
 			PlatformID: GetIntOrDefault("openim.platform_id", 5),
-			AdminID:    GetStringOrDefault("openim.admin_id", "openkf_admin"),
+			AdminID:    GetStringOrDefault("openim.admin_id", "imAdmin"),
 		},
 		Slack: Slack{
 			BotToken:          GetString("slack.bot_token"),

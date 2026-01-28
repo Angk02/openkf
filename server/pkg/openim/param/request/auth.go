@@ -14,9 +14,14 @@
 
 package request
 
-// UserTokenParams register admin params.
+// AdminTokenParams get admin token params.
+type AdminTokenParams struct {
+	Secret string `json:"secret" binding:"required"`
+	UserID string `json:"userID" binding:"required"`
+}
+
+// UserTokenParams get user token params.
 type UserTokenParams struct {
-	Secret     string `json:"secret"     binding:"required"`
 	PlatformID uint   `json:"platformID" binding:"required"`
 	UserID     string `json:"userID"     binding:"required"`
 }

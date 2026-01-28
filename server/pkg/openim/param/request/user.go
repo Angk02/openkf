@@ -16,8 +16,7 @@ package request
 
 // RegisterUserParams register user params.
 type RegisterUserParams struct {
-	Secret string `json:"secret" binding:"required"`
-	Users  []User `json:"users"  binding:"required"`
+	Users []User `json:"users"  binding:"required"`
 }
 
 // User user.

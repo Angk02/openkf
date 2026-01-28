@@ -15,7 +15,10 @@
 package bot_test
 
 import (
+	"os"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/openimsdk/openkf/server/pkg/openim/param/request"
 	"github.com/openimsdk/openkf/server/pkg/openim/sdk/bot"
@@ -23,6 +26,11 @@ import (
 
 // TestAskBot test ask bot info
 func TestAskBot(t *testing.T) {
+	host := os.Getenv("OPENKF_BOT_API_ADDRESS")
+	if host == "" {
+		t.Skip("set OPENKF_BOT_API_ADDRESS (e.g. http://localhost:10011) to run this integration test")
+	}
+
 	// test case
 	testData := []struct {
 		query string
@@ -37,11 +45,11 @@ func TestAskBot(t *testing.T) {
 		resp, err := bot.AskBot(&request.BotQuery{
 			Query: data.query,
 		},
-			"123123123123",
-			"http://localhost:10011")
+			strconv.FormatInt(time.Now().UnixMilli(), 10),
+			host)
 		if err != nil {
-			t.Error(err)
+			t.Fatal(err)
 		}
-		t.Error(resp)
+		t.Logf("%+v", resp)
 	}
 }

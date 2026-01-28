@@ -17,7 +17,7 @@ package cache
 import (
 	"context"
 	"fmt"
-	"log"
+	"os"
 	"testing"
 	"time"
 
@@ -25,10 +25,17 @@ import (
 )
 
 func TestSub(t *testing.T) {
+	addr := os.Getenv("OPENKF_REDIS_ADDR")
+	if addr == "" {
+		t.Skip("set OPENKF_REDIS_ADDR (e.g. localhost:6379) to run this integration test")
+	}
+	password := os.Getenv("OPENKF_REDIS_PASSWORD")
+	dbIndex := 0
+
 	client := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6380",
-		Password: "openkf",
-		DB:       0,
+		Addr:     addr,
+		Password: password,
+		DB:       dbIndex,
 	})
 
 	ctx := context.Background()
@@ -43,18 +50,18 @@ func TestSub(t *testing.T) {
 
 	err := client.Set(ctx, "mykey", "myvalue", 5*time.Second).Err()
 	if err != nil {
-		log.Fatal(err)
+		t.Fatal(err)
 	}
 
 	time.Sleep(10 * time.Second)
 
 	err = pubsub.Close()
 	if err != nil {
-		log.Fatal(err)
+		t.Fatal(err)
 	}
 
 	err = client.Close()
 	if err != nil {
-		log.Fatal(err)
+		t.Fatal(err)
 	}
 }

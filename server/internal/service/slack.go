@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"net"
 
-	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/shomali11/slacker"
 	"github.com/slack-go/slack"
@@ -120,7 +119,6 @@ func (svc *SlackService) CreateCustomer(userId string, profile *slack.UserProfil
 	s, _ := svc.CustomerSlackDao.FindFirstByUUID(userId)
 
 	param := &request.RegisterUserParams{
-		Secret: config.Config.OpenIM.Secret,
 		Users: []request.User{
 			{
 				UserID:   userId,
@@ -169,8 +167,7 @@ func (svc *SlackService) SendMsg(uid, question string, botContext slacker.BotCon
 	}
 
 	// Get OpenIM admin token
-	uSvc := NewUserService(&gin.Context{}) // TODO: Change context to same
-	token, err := uSvc.GetAdminToken()
+	token, err := getOpenIMAdminToken()
 	if err != nil {
 		return errors.Wrapf(err, "get admin token failed")
 	}
@@ -189,7 +186,7 @@ func (svc *SlackService) SendMsg(uid, question string, botContext slacker.BotCon
 		SenderFaceURL:    customer.Avatar,
 		SenderPlatformID: constant.PLATFORMID_WEB,
 		Content: &request.TextContent{
-			Text: fmt.Sprintf("{\"content\":\"%s\"}", question),
+			Content: question,
 		},
 		ContentType:     constant.CONTENT_TYPE_TEXT,
 		SessionType:     constant.SESSION_TYPE_SINGLE_CHAT,

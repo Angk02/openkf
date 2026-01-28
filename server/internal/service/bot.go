@@ -18,7 +18,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/openimsdk/openkf/server/internal/common"
-	"github.com/openimsdk/openkf/server/internal/config"
 	"github.com/openimsdk/openkf/server/internal/dal/dao"
 	systemroles "github.com/openimsdk/openkf/server/internal/models/system_roles"
 	requestparams "github.com/openimsdk/openkf/server/internal/params/request"
@@ -74,7 +73,6 @@ func (svc *BotService) CreateBot(cid string, params *requestparams.CreateBotPara
 
 	// Register bot to OpenIM
 	param := &request.RegisterUserParams{
-		Secret: config.Config.OpenIM.Secret,
 		Users: []request.User{
 			{
 				UserID:   uid,

@@ -15,39 +15,87 @@
 package auth_test
 
 import (
+	"os"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/openimsdk/openkf/server/pkg/openim/param/request"
 	"github.com/openimsdk/openkf/server/pkg/openim/sdk/auth"
 )
 
-// TestGetUserToken test get user token function
-func TestGetUserToken(t *testing.T) {
-	// test case
-	testData := []struct {
-		secret     string
-		platformID uint
-		userID     string
-	}{
-		{
-			secret:     "openIM123",
-			platformID: 5,
-			userID:     "openIMAdmin",
-		},
+func TestGetAdminToken(t *testing.T) {
+	api := os.Getenv("OPENIM_API_ADDRESS")
+	if api == "" {
+		t.Skip("set OPENIM_API_ADDRESS (e.g. http://127.0.0.1:10002) to run this integration test")
+	}
+	secret := os.Getenv("OPENIM_SECRET")
+	if secret == "" {
+		secret = "openIM123"
+	}
+	adminID := os.Getenv("OPENIM_ADMIN_ID")
+	if adminID == "" {
+		adminID = "imAdmin"
 	}
 
-	// range test case
-	for _, data := range testData {
-		token, err := auth.GetUserToken(&request.UserTokenParams{
-			Secret:     data.secret,
-			PlatformID: data.platformID,
-			UserID:     data.userID,
-		},
-			"123123123123",
-			"http://127.0.0.1:10002")
-		if err != nil {
-			t.Error(err)
-		}
-		t.Error(token)
+	op := strconv.FormatInt(time.Now().UnixMilli(), 10)
+	resp, err := auth.GetAdminToken(&request.AdminTokenParams{
+		Secret: secret,
+		UserID: adminID,
+	}, op, api)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if resp.ErrCode != 0 {
+		t.Fatalf("OpenIM error: errCode=%d errMsg=%s errDlt=%s", resp.ErrCode, resp.ErrMsg, resp.ErrDlt)
+	}
+	if resp.Data.Token == "" {
+		t.Fatalf("empty token")
+	}
+}
+
+func TestGetUserToken(t *testing.T) {
+	api := os.Getenv("OPENIM_API_ADDRESS")
+	if api == "" {
+		t.Skip("set OPENIM_API_ADDRESS (e.g. http://127.0.0.1:10002) to run this integration test")
+	}
+	userID := os.Getenv("OPENIM_TEST_USER_ID")
+	if userID == "" {
+		t.Skip("set OPENIM_TEST_USER_ID to run this integration test")
+	}
+
+	secret := os.Getenv("OPENIM_SECRET")
+	if secret == "" {
+		secret = "openIM123"
+	}
+	adminID := os.Getenv("OPENIM_ADMIN_ID")
+	if adminID == "" {
+		adminID = "imAdmin"
+	}
+
+	op := strconv.FormatInt(time.Now().UnixMilli(), 10)
+	adminResp, err := auth.GetAdminToken(&request.AdminTokenParams{
+		Secret: secret,
+		UserID: adminID,
+	}, op+"-admin", api)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if adminResp.ErrCode != 0 {
+		t.Fatalf("OpenIM error: errCode=%d errMsg=%s errDlt=%s", adminResp.ErrCode, adminResp.ErrMsg, adminResp.ErrDlt)
+	}
+
+	userResp, err := auth.GetUserToken(&request.UserTokenParams{
+		PlatformID: 5,
+		UserID:     userID,
+	}, op+"-user", api, adminResp.Data.Token)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if userResp.ErrCode != 0 {
+		t.Fatalf("OpenIM error: errCode=%d errMsg=%s errDlt=%s", userResp.ErrCode, userResp.ErrMsg, userResp.ErrDlt)
+	}
+	if userResp.Data.Token == "" {
+		t.Fatalf("empty token")
 	}
 }

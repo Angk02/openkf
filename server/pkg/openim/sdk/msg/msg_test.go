@@ -16,15 +16,34 @@ package msg
 
 import (
 	"fmt"
+	"os"
+	"strconv"
 	"testing"
+	"time"
 
 	"github.com/openimsdk/openkf/server/pkg/openim/param/request"
+	"github.com/openimsdk/openkf/server/pkg/openim/sdk/auth"
 	"github.com/openimsdk/openkf/server/pkg/openim/sdk/constant"
 )
 
 // TestAdminSendMsg test admin send msg function
 func TestAdminSendMsg(t *testing.T) {
-	adminToken := "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVc2VySUQiOiJvcGVuSU1BZG1pbiIsIlBsYXRmb3JtSUQiOjEsImV4cCI6MTY5OTQyNTExMywibmJmIjoxNjkxNjQ4ODEzLCJpYXQiOjE2OTE2NDkxMTN9.JYNly2XpKkZuwZ9t4YTGki2TFst29fQYlmIFQytsoho"
+	api := os.Getenv("OPENIM_API_ADDRESS")
+	if api == "" {
+		t.Skip("set OPENIM_API_ADDRESS (e.g. http://127.0.0.1:10002) to run this integration test")
+	}
+	secret := os.Getenv("OPENIM_SECRET")
+	if secret == "" {
+		secret = "openIM123"
+	}
+	adminID := os.Getenv("OPENIM_ADMIN_ID")
+	if adminID == "" {
+		adminID = "imAdmin"
+	}
+	recvID := os.Getenv("OPENIM_TEST_RECV_ID")
+	if recvID == "" {
+		t.Skip("set OPENIM_TEST_RECV_ID to run this integration test")
+	}
 
 	// test case
 	testData := []struct {
@@ -36,13 +55,25 @@ func TestAdminSendMsg(t *testing.T) {
 		sessionType      int
 	}{
 		{
-			sendID:           "555248a1d1409a7abb5830fdad5d",
-			recvID:           "54c09e9a6645bad1c6657dcee887",
+			sendID:           adminID,
+			recvID:           recvID,
 			SenderPlatformID: constant.PLATFORMID_WEB,
-			content:          "{\"content\":\"hello world!\"}",
+			content:          "hello world!",
 			contentType:      constant.CONTENT_TYPE_TEXT,
 			sessionType:      constant.SESSION_TYPE_SINGLE_CHAT,
 		},
+	}
+
+	op := strconv.FormatInt(time.Now().UnixMilli(), 10)
+	adminResp, err := auth.GetAdminToken(&request.AdminTokenParams{
+		Secret: secret,
+		UserID: adminID,
+	}, op+"-admin", api)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if adminResp.ErrCode != 0 {
+		t.Fatalf("OpenIM error: errCode=%d errMsg=%s errDlt=%s", adminResp.ErrCode, adminResp.ErrMsg, adminResp.ErrDlt)
 	}
 
 	// range test case
@@ -51,13 +82,13 @@ func TestAdminSendMsg(t *testing.T) {
 			SendID:           data.sendID,
 			RecvID:           data.recvID,
 			SenderPlatformID: data.SenderPlatformID,
-			Content:          &request.TextContent{Text: data.content},
+			Content:          &request.TextContent{Content: data.content},
 			ContentType:      data.contentType,
 			SessionType:      data.sessionType,
 		},
-			"123123123123123",
-			"http://127.0.0.1:10002",
-			adminToken,
+			op+"-send",
+			api,
+			adminResp.Data.Token,
 		)
 		if err != nil {
 			t.Error(err)

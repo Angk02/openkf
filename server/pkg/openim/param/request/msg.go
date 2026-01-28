@@ -27,12 +27,14 @@ type MsgInfo struct {
 	SessionType      int              `json:"sessionType"      binding:"required"`
 	IsOnlineOnly     bool             `json:"isOnlineOnly"`
 	NotOfflinePush   bool             `json:"notOfflinePush"`
+	SendTime         int64            `json:"sendTime,omitempty"`
 	OfflinePushInfo  *OfflinePushInfo `json:"offlinePushInfo"`
+	Ex               string           `json:"ex,omitempty"`
 }
 
 // TextContent text content.
 type TextContent struct {
-	Text string `json:"content"`
+	Content string `json:"content"`
 }
 
 // OfflinePushInfo offline push info.

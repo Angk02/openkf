@@ -94,7 +94,6 @@ func (svc *UserService) CreateAdmin(user *requestparams.RegisterAdminParams) (st
 
 	// TODO: set pipline to tx.
 	param := &request.RegisterUserParams{
-		Secret: config.Config.OpenIM.Secret,
 		Users: []request.User{
 			{
 				UserID:   uuid,
@@ -147,7 +146,6 @@ func (svc *UserService) CreateStaff(cid string, user *requestparams.RegisterStaf
 
 	// TODO: set pipline to tx.
 	param := &request.RegisterUserParams{
-		Secret: config.Config.OpenIM.Secret,
 		Users: []request.User{
 			{
 				UserID:   uid,
@@ -173,7 +171,13 @@ func registerUserToOpenIM(param *request.RegisterUserParams) (bool, error) {
 
 	// Default not use tls/ssl
 	host := fmt.Sprintf("http://%s", net.JoinHostPort(config.Config.OpenIM.Ip, fmt.Sprintf("%d", config.Config.OpenIM.ApiPort)))
-	resp, err := user.RegisterUser(param, "registerUserToOpenIM", host)
+
+	adminToken, err := getOpenIMAdminToken()
+	if err != nil {
+		return false, err
+	}
+
+	resp, err := user.RegisterUser(param, "registerUserToOpenIM", host, adminToken.Token)
 	if err != nil {
 		return false, err
 	}
@@ -234,7 +238,6 @@ func (svc *UserService) LoginWithAccount(param *requestparams.LoginParamsWithAcc
 
 	// Get IM token
 	imParam := &request.UserTokenParams{
-		Secret:     config.Config.OpenIM.Secret,
 		UserID:     u.UUID,
 		PlatformID: uint(config.Config.OpenIM.PlatformID),
 	}
@@ -265,7 +268,13 @@ func getUserIMToken(param *request.UserTokenParams) (*response.TokenData, error)
 
 	// Default not use tls/ssl
 	host := fmt.Sprintf("http://%s", net.JoinHostPort(config.Config.OpenIM.Ip, fmt.Sprintf("%d", config.Config.OpenIM.ApiPort)))
-	resp, err := auth.GetUserToken(param, "getUserIMToken", host)
+
+	adminToken, err := getOpenIMAdminToken()
+	if err != nil {
+		return &response.TokenData{}, err
+	}
+
+	resp, err := auth.GetUserToken(param, "getUserIMToken", host, adminToken.Token)
 	if err != nil {
 		return &response.TokenData{}, err
 	}
@@ -277,17 +286,28 @@ func getUserIMToken(param *request.UserTokenParams) (*response.TokenData, error)
 	return &resp.Data, nil
 }
 
-// GetAdminToken get admin token.
-func (svc *UserService) GetAdminToken() (*response.TokenData, error) {
-	params := &request.UserTokenParams{
-		Secret:     config.Config.OpenIM.Secret,
-		PlatformID: uint(config.Config.OpenIM.PlatformID),
-		UserID:     config.Config.OpenIM.AdminID,
+func getOpenIMAdminToken() (*response.TokenData, error) {
+	// Default not use tls/ssl
+	host := fmt.Sprintf("http://%s", net.JoinHostPort(config.Config.OpenIM.Ip, fmt.Sprintf("%d", config.Config.OpenIM.ApiPort)))
+	params := &request.AdminTokenParams{
+		Secret: config.Config.OpenIM.Secret,
+		UserID: config.Config.OpenIM.AdminID,
 	}
 
-	// TODO: Get cache from redis
+	resp, err := auth.GetAdminToken(params, "getOpenIMAdminToken", host)
+	if err != nil {
+		return &response.TokenData{}, err
+	}
+	if resp.ErrCode != 0 {
+		return &response.TokenData{}, errors.New(resp.ErrMsg)
+	}
+	return &resp.Data, nil
+}
 
-	return getUserIMToken(params)
+// GetAdminToken get admin token.
+func (svc *UserService) GetAdminToken() (*response.TokenData, error) {
+	// TODO: Get cache from redis
+	return getOpenIMAdminToken()
 }
 
 // GetUserInfoByUUID get user info by uuid.

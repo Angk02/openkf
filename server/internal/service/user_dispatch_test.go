@@ -16,6 +16,7 @@ package service
 
 import (
 	"context"
+	"os"
 	"testing"
 
 	"github.com/openimsdk/openkf/server/internal/config"
@@ -25,6 +26,10 @@ import (
 
 // TestUserQueue test user queue.
 func TestUserQueue(t *testing.T) {
+	if os.Getenv("OPENKF_INTEGRATION_TESTS") == "" {
+		t.Skip("set OPENKF_INTEGRATION_TESTS=1 to run this integration test")
+	}
+
 	// Init
 	config.ConfigInit("../../config.yaml")
 	log.InitLogger()

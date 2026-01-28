@@ -28,13 +28,13 @@ const (
 )
 
 // RegisterUser register user.
-func RegisterUser(param *request.RegisterUserParams, operationID, host string) (*response.BaseResponse, error) {
+func RegisterUser(param *request.RegisterUserParams, operationID, host, adminToken string) (*response.BaseResponse, error) {
 	// host: http://ip:port
 	url := fmt.Sprintf("%s%s", host, pathUserRegister)
 
 	r := &response.BaseResponse{}
 	client := client.NewClient(url)
-	resp, err := client.POST(operationID, "", param)
+	resp, err := client.POST(operationID, adminToken, param)
 	if err != nil {
 		return r, err
 	}

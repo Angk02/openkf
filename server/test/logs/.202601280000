@@ -1,0 +1,36 @@
+2026-01-28 17:21:02.601[37m [DEBU] [FilePath:server/test/log_test.go:87] [Operation:test-debug-1] [0m
+2026-01-28 17:21:02.602[37m [DEBU] [FilePath:server/test/log_test.go:87] [Operation:test-debug-2] [0marg2-1 arg2-2
+2026-01-28 17:21:02.602[37m [DEBU] [FilePath:server/test/log_test.go:87] [Operation:test-debug-3] [0marg3 3
+2026-01-28 17:21:02.602[37m [DEBU] [FilePath:server/test/log_test.go:130] [Operation:test-DebugFormat-1] [0m
+2026-01-28 17:21:02.602[37m [DEBU] [FilePath:server/test/log_test.go:130] [Operation:test-DebugFormat-2] [0marg2-1,arg2-2
+2026-01-28 17:21:02.602[37m [DEBU] [FilePath:server/test/log_test.go:130] [Operation:test-DebugFormat-3] [0marg3,3
+2026-01-28 17:21:02.602[36m [INFO] [FilePath:server/test/log_test.go:251] [Operation:test-Info-1] [0m
+2026-01-28 17:21:02.602[36m [INFO] [FilePath:server/test/log_test.go:251] [Operation:test-Info-2] [0marg2-1 arg2-2
+2026-01-28 17:21:02.602[36m [INFO] [FilePath:server/test/log_test.go:251] [Operation:test-Info-3] [0marg3 3
+2026-01-28 17:21:02.602[36m [INFO] [FilePath:server/test/log_test.go:294] [Operation:test-InfoFormat-1] [0m
+2026-01-28 17:21:02.602[36m [INFO] [FilePath:server/test/log_test.go:294] [Operation:test-InfoFormat-2] [0marg2-1,arg2-2
+2026-01-28 17:21:02.602[36m [INFO] [FilePath:server/test/log_test.go:294] [Operation:test-InfoFormat-3] [0marg3,3
+2026-01-28 17:21:02.602[31m [ERRO] [FilePath:server/test/log_test.go:169] [Operation:test-Error-1] [0m
+2026-01-28 17:21:02.602[31m [ERRO] [FilePath:server/test/log_test.go:169] [Operation:test-Error-2] [0marg2-1 arg2-2
+2026-01-28 17:21:02.602[31m [ERRO] [FilePath:server/test/log_test.go:169] [Operation:test-Error-3] [0marg3 3
+2026-01-28 17:21:02.602[31m [ERRO] [FilePath:server/test/log_test.go:212] [Operation:test-ErrorFormat-1] [0m
+2026-01-28 17:21:02.602[31m [ERRO] [FilePath:server/test/log_test.go:212] [Operation:test-ErrorFormat-2] [0marg2-1,arg2-2
+2026-01-28 17:21:02.603[31m [ERRO] [FilePath:server/test/log_test.go:212] [Operation:test-ErrorFormat-3] [0marg3,3
+2026-01-28 17:23:26.850[37m [DEBU] [FilePath:server/test/log_test.go:87] [Operation:test-debug-1] [0m
+2026-01-28 17:23:26.851[37m [DEBU] [FilePath:server/test/log_test.go:87] [Operation:test-debug-2] [0marg2-1 arg2-2
+2026-01-28 17:23:26.851[37m [DEBU] [FilePath:server/test/log_test.go:87] [Operation:test-debug-3] [0marg3 3
+2026-01-28 17:23:26.851[37m [DEBU] [FilePath:server/test/log_test.go:130] [Operation:test-DebugFormat-1] [0m
+2026-01-28 17:23:26.851[37m [DEBU] [FilePath:server/test/log_test.go:130] [Operation:test-DebugFormat-2] [0marg2-1,arg2-2
+2026-01-28 17:23:26.851[37m [DEBU] [FilePath:server/test/log_test.go:130] [Operation:test-DebugFormat-3] [0marg3,3
+2026-01-28 17:23:26.851[36m [INFO] [FilePath:server/test/log_test.go:251] [Operation:test-Info-1] [0m
+2026-01-28 17:23:26.852[36m [INFO] [FilePath:server/test/log_test.go:251] [Operation:test-Info-2] [0marg2-1 arg2-2
+2026-01-28 17:23:26.852[36m [INFO] [FilePath:server/test/log_test.go:251] [Operation:test-Info-3] [0marg3 3
+2026-01-28 17:23:26.852[36m [INFO] [FilePath:server/test/log_test.go:294] [Operation:test-InfoFormat-1] [0m
+2026-01-28 17:23:26.852[36m [INFO] [FilePath:server/test/log_test.go:294] [Operation:test-InfoFormat-2] [0marg2-1,arg2-2
+2026-01-28 17:23:26.852[36m [INFO] [FilePath:server/test/log_test.go:294] [Operation:test-InfoFormat-3] [0marg3,3
+2026-01-28 17:23:26.852[31m [ERRO] [FilePath:server/test/log_test.go:169] [Operation:test-Error-1] [0m
+2026-01-28 17:23:26.852[31m [ERRO] [FilePath:server/test/log_test.go:169] [Operation:test-Error-2] [0marg2-1 arg2-2
+2026-01-28 17:23:26.852[31m [ERRO] [FilePath:server/test/log_test.go:169] [Operation:test-Error-3] [0marg3 3
+2026-01-28 17:23:26.852[31m [ERRO] [FilePath:server/test/log_test.go:212] [Operation:test-ErrorFormat-1] [0m
+2026-01-28 17:23:26.852[31m [ERRO] [FilePath:server/test/log_test.go:212] [Operation:test-ErrorFormat-2] [0marg2-1,arg2-2
+2026-01-28 17:23:26.852[31m [ERRO] [FilePath:server/test/log_test.go:212] [Operation:test-ErrorFormat-3] [0marg3,3
