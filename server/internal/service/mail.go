@@ -24,6 +24,7 @@ import (
 	"github.com/openimsdk/openkf/server/internal/conn/db"
 	"github.com/openimsdk/openkf/server/internal/dal/cache"
 	"github.com/openimsdk/openkf/server/internal/utils"
+	"github.com/openimsdk/openkf/server/pkg/log"
 	pkgutils "github.com/openimsdk/openkf/server/pkg/utils"
 )
 
@@ -58,9 +59,8 @@ func (svc *MailService) SendCode(email string) (err error) {
 		// save code in 60s
 		err = svc.cache.Set(svc.ctx, "code:"+email, code, time.Second*60)
 
-		return err
 	}
-
+	log.Debugf("GetEmailcode: code=%s", code)
 	// Generate code.
 	err = client.SendEmail(email, "OpenKF Admin Register", "Your verification code is "+code)
 

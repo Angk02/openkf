@@ -56,6 +56,7 @@ func SendEmail(to string, subject string, body string) error {
 	email.Subject = subject
 	email.Text = []byte(body)
 
+	log.Debugf("GetEmailsendmessage: addr=%s", fmt.Sprintf("%s:%d", config.Config.Email.Host, config.Config.Email.Port))
 	if err := email.Send(
 		fmt.Sprintf("%s:%d", config.Config.Email.Host, config.Config.Email.Port),
 		smtp.PlainAuth(
